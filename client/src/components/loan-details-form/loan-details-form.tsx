@@ -72,9 +72,7 @@ export const LoanDetailsForm = ({
   };
 
   useEffect(() => {
-    if (loanPurpose !== "vehicle") {
-      setValue("deposit", 0);
-    }
+    setValue("deposit", null);
   }, [loanPurpose, setValue]);
 
   return (

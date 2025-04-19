@@ -1,7 +1,19 @@
 import { useTheme } from "@mui/material";
 import { useState } from "react";
-import { FlexCol, H4, ICustomButton, LoanStepper } from "../../components";
-import { LoanFormData } from "../../types";
+import {
+  BottomButtons,
+  FlexCol,
+  H4,
+  ICustomButton,
+  LoanDetailsForm,
+  LoanStepper,
+  PersonalDetailsForm,
+} from "../../components";
+import {
+  LoanDetailsFormValues,
+  LoanFormData,
+  PersonalDetailsFormValues,
+} from "../../types";
 
 const defaultValue: LoanFormData = {
   firstName: "",
@@ -10,9 +22,9 @@ const defaultValue: LoanFormData = {
   employmentStatus: "employed",
   employerName: "",
   loanPurpose: "vehicle",
-  amount: 0,
-  deposit: 0,
-  loanTerm: 1,
+  amount: null,
+  deposit: null,
+  loanTerm: null,
 };
 
 export const LoanApplication = () => {
@@ -23,11 +35,32 @@ export const LoanApplication = () => {
     setActiveStep(activeStep + 1);
   };
 
-  const nextButton: ICustomButton = {
-    option: "enable",
-    variant: "contained",
-    text: "Next",
-    onClick: handleNext,
+  const handleBack = () => {
+    setActiveStep(activeStep - 1);
+  };
+
+  const personalDetailsNext = (data: PersonalDetailsFormValues) => {
+    setFormData((prev) => ({
+      ...prev,
+      ...data,
+    }));
+
+    // do something if needed
+    handleNext();
+  };
+
+  const onLoanDetailsSubmit = (data: LoanDetailsFormValues) => {
+    setFormData((prev) => ({
+      ...prev,
+      ...data,
+    }));
+
+    // call api
+    handleNext();
+  };
+
+  const resetFormData = () => {
+    setFormData(defaultValue);
   };
 
   const backButton: ICustomButton = {
@@ -40,17 +73,6 @@ export const LoanApplication = () => {
     text: "Back",
   };
 
-  const getCommonButton = (
-    handleClick: () => void,
-    text: string = "Reset"
-  ): ICustomButton => ({
-    option: "enable",
-    variant: "text",
-    sx: { color: "gray" },
-    onClick: handleClick,
-    text,
-  });
-
   const againButton: ICustomButton = {
     option: "enable",
     variant: "contained",
@@ -58,14 +80,8 @@ export const LoanApplication = () => {
     text: "Again",
     onClick: () => {
       setActiveStep(0);
+      resetFormData();
     },
-  };
-
-  const submitButton: ICustomButton = {
-    option: "enable",
-    variant: "contained",
-    text: "Submit",
-    onClick: handleNext,
   };
 
   const theme = useTheme();
@@ -73,30 +89,56 @@ export const LoanApplication = () => {
     {
       name: "personal-details",
       label: "Personal Details",
-      component: <></>,
-      bottomButtons: {
-        primary: nextButton,
-        secondary: getCommonButton(() => {}),
-      },
+      component: (
+        <PersonalDetailsForm
+          defaultValue={defaultValue}
+          formData={formData}
+          onNext={personalDetailsNext}
+          onReset={() => {
+            setFormData((prev) => ({
+              ...prev,
+              loanPurpose: "vehicle",
+              amount: null,
+              deposit: null,
+              loanTerm: null,
+            }));
+          }}
+        />
+      ),
     },
     {
       name: "loan-details",
       label: "Loan Details",
-      component: <></>,
-      bottomButtons: {
-        primary: submitButton,
-        secondary: getCommonButton(() => {}),
-        destructive: backButton,
-      },
+      component: (
+        <LoanDetailsForm
+          defaultValue={defaultValue}
+          formData={formData}
+          onNext={onLoanDetailsSubmit}
+          onBack={handleBack}
+          onReset={() => {
+            setFormData((prev) => ({
+              ...prev,
+              firstName: "",
+              lastName: "",
+              email: "",
+              employmentStatus: "employed",
+              employerName: "",
+            }));
+          }}
+        />
+      ),
     },
     {
       name: "suggestions",
       label: "Loan Suggestions",
-      component: <></>,
-      bottomButtons: {
-        primary: againButton,
-        destructive: backButton,
-      },
+      component: (
+        <BottomButtons
+          buttonProps={{
+            primary: againButton,
+            destructive: backButton,
+          }}
+        />
+      ),
     },
   ];
 

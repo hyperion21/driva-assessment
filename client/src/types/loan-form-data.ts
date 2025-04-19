@@ -5,9 +5,9 @@ export interface LoanFormData {
   employmentStatus: "employed" | "self-employed" | "unemployed";
   employerName?: string;
   loanPurpose: "vehicle" | "home" | "etc";
-  amount: number;
-  deposit: number;
-  loanTerm: number;
+  amount: number | null;
+  deposit: number | null;
+  loanTerm: number | null;
 }
 
 export interface PersonalDetailsFormValues {
@@ -20,7 +20,7 @@ export interface PersonalDetailsFormValues {
 
 export interface LoanDetailsFormValues {
   loanPurpose: "vehicle" | "home" | "etc";
-  amount: number;
-  deposit: number;
-  loanTerm: number;
+  amount: number | null;
+  deposit: number | null;
+  loanTerm: number | null;
 }

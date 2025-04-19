@@ -1,7 +1,6 @@
 import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
 import Stepper from "@mui/material/Stepper";
-import { BottomButtons } from "../bottom-buttons";
 import { FlexCol } from "../display";
 import { Body1 } from "../typography";
 import { ILoanStepper } from "./loan-stepper.types";
@@ -23,7 +22,6 @@ export const LoanStepper = ({
         ))}
       </Stepper>
       {steps[activeStep].component}
-      <BottomButtons buttonProps={steps[activeStep].bottomButtons} />
     </FlexCol>
   );
 };

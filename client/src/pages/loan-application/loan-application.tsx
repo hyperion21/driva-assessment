@@ -8,6 +8,7 @@ import {
   LoanStepper,
   PersonalDetailsStep,
 } from "../../components";
+import { useLenderStore } from "../../store";
 import {
   LoanDetailsFormValues,
   LoanFormData,
@@ -30,6 +31,8 @@ export const LoanApplication = () => {
   const [activeStep, setActiveStep] = useState(0);
   const [formData, setFormData] = useState<LoanFormData>(defaultValue);
 
+  const { fetchLenders } = useLenderStore();
+
   const handleNext = () => {
     setActiveStep(activeStep + 1);
   };
@@ -48,13 +51,17 @@ export const LoanApplication = () => {
     handleNext();
   };
 
-  const onLoanDetailsSubmit = (data: LoanDetailsFormValues) => {
+  const onLoanDetailsSubmit = async (data: LoanDetailsFormValues) => {
     setFormData((prev) => ({
       ...prev,
       ...data,
     }));
 
-    // do something if needed
+    await fetchLenders({
+      deposit: data.deposit ?? 0,
+      amount: data.amount ?? 0,
+      loanTerm: data.loanTerm ?? 0,
+    });
     handleNext();
   };
 
@@ -115,11 +122,7 @@ export const LoanApplication = () => {
       name: "suggestions",
       label: "Loan Suggestions",
       component: (
-        <LenderSuggestionsStep
-          formData={formData}
-          onBack={handleBack}
-          onAgain={handleAgain}
-        />
+        <LenderSuggestionsStep onBack={handleBack} onAgain={handleAgain} />
       ),
     },
   ];

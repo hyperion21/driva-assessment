@@ -14,9 +14,9 @@ export const loanDetailsSchema: yup.ObjectSchema<LoanDetailsFormValues> =
       .required("Amount is required"),
     deposit: yup
       .number()
+      .transform((value, originalValue) => (originalValue == null ? 0 : value))
       .nullable()
       .default(null)
-      .transform((value, originalValue) => (originalValue == null ? 0 : value))
       .typeError("Deposit must be a number")
       .min(0, "Deposit must be at least $0")
       .when("loanPurpose", {

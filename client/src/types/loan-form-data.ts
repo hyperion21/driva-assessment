@@ -24,3 +24,9 @@ export interface LoanDetailsFormValues {
   deposit: number | null;
   loanTerm: number | null;
 }
+
+export interface LoanRequest {
+  amount: number;
+  deposit: number;
+  loanTerm: number;
+}

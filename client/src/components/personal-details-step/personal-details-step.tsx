@@ -14,7 +14,7 @@ import { FlexCol } from "../display";
 import { H6 } from "../typography";
 import { personalDetailsSchema } from "./validation";
 
-export const PersonalDetailsForm = ({
+export const PersonalDetailsStep = ({
   defaultValue,
   formData,
   onNext,

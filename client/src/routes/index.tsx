@@ -1,10 +1,9 @@
-import Box from "@mui/material/Box";
-import { LoanApplication } from "../pages";
+import { LoanApplication, NotFound } from "../pages";
 
 const routes = [
   {
     path: "*",
-    element: <Box />,
+    element: <NotFound />,
   },
   {
     path: "/",

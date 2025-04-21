@@ -13,7 +13,7 @@ import { ICustomButton } from "../custom-button";
 import { FlexCol } from "../display";
 import { loanDetailsSchema } from "./validation";
 
-export const LoanDetailsForm = ({
+export const LoanDetailsStep = ({
   defaultValue,
   formData,
   onNext,

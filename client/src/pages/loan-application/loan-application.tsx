@@ -1,13 +1,12 @@
 import { useTheme } from "@mui/material";
 import { useState } from "react";
 import {
-  BottomButtons,
   FlexCol,
   H4,
-  ICustomButton,
-  LoanDetailsForm,
+  LenderSuggestionsStep,
+  LoanDetailsStep,
   LoanStepper,
-  PersonalDetailsForm,
+  PersonalDetailsStep,
 } from "../../components";
 import {
   LoanDetailsFormValues,
@@ -55,7 +54,7 @@ export const LoanApplication = () => {
       ...data,
     }));
 
-    // call api
+    // do something if needed
     handleNext();
   };
 
@@ -63,25 +62,9 @@ export const LoanApplication = () => {
     setFormData(defaultValue);
   };
 
-  const backButton: ICustomButton = {
-    option: "enable",
-    variant: "text",
-    sx: { color: "gray" },
-    onClick: () => {
-      setActiveStep(activeStep - 1);
-    },
-    text: "Back",
-  };
-
-  const againButton: ICustomButton = {
-    option: "enable",
-    variant: "contained",
-    color: "warning",
-    text: "Again",
-    onClick: () => {
-      setActiveStep(0);
-      resetFormData();
-    },
+  const handleAgain = () => {
+    setActiveStep(0);
+    resetFormData();
   };
 
   const theme = useTheme();
@@ -90,7 +73,7 @@ export const LoanApplication = () => {
       name: "personal-details",
       label: "Personal Details",
       component: (
-        <PersonalDetailsForm
+        <PersonalDetailsStep
           defaultValue={defaultValue}
           formData={formData}
           onNext={personalDetailsNext}
@@ -110,7 +93,7 @@ export const LoanApplication = () => {
       name: "loan-details",
       label: "Loan Details",
       component: (
-        <LoanDetailsForm
+        <LoanDetailsStep
           defaultValue={defaultValue}
           formData={formData}
           onNext={onLoanDetailsSubmit}
@@ -132,11 +115,10 @@ export const LoanApplication = () => {
       name: "suggestions",
       label: "Loan Suggestions",
       component: (
-        <BottomButtons
-          buttonProps={{
-            primary: againButton,
-            destructive: backButton,
-          }}
+        <LenderSuggestionsStep
+          formData={formData}
+          onBack={handleBack}
+          onAgain={handleAgain}
         />
       ),
     },

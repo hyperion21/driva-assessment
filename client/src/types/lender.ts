@@ -1,6 +1,8 @@
 export interface Lender {
   id: string;
+  name: string;
   monthly: number;
   interest: number;
-  fee?: number;
+  fee?: string;
+  image?: string;
 }

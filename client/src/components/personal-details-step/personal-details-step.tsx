@@ -7,24 +7,16 @@ import Select from "@mui/material/Select";
 import TextField from "@mui/material/TextField";
 import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { LoanFormData, PersonalDetailsFormValues } from "../../types";
+import { useFormStore } from "../../store";
+import { PersonalDetailsFormValues } from "../../types";
 import { BottomButtons } from "../bottom-buttons";
 import { ICustomButton } from "../custom-button";
 import { FlexCol } from "../display";
 import { H6 } from "../typography";
 import { personalDetailsSchema } from "./validation";
 
-export const PersonalDetailsStep = ({
-  defaultValue,
-  formData,
-  onNext,
-  onReset,
-}: {
-  defaultValue: LoanFormData;
-  formData: LoanFormData;
-  onNext: (data: PersonalDetailsFormValues) => void;
-  onReset: () => void;
-}) => {
+export const PersonalDetailsStep = ({ onNext }: { onNext: () => void }) => {
+  const { formData, setFormData, resetFormData } = useFormStore();
   const {
     register,
     handleSubmit,
@@ -34,12 +26,16 @@ export const PersonalDetailsStep = ({
     reset,
   } = useForm<PersonalDetailsFormValues>({
     resolver: yupResolver(personalDetailsSchema),
-    defaultValues: defaultValue,
+    defaultValues: formData,
   });
 
   useEffect(() => {
     reset(formData);
   }, [formData, reset]);
+
+  const handleReset = () => {
+    resetFormData();
+  };
 
   const employmentStatus = watch("employmentStatus");
   const personalDetailsNextButton: ICustomButton = {
@@ -53,10 +49,7 @@ export const PersonalDetailsStep = ({
     option: "enable",
     variant: "text",
     sx: { color: "gray" },
-    onClick: () => {
-      onReset();
-      reset();
-    },
+    onClick: handleReset,
     text: "Reset",
   };
   return (
@@ -65,7 +58,16 @@ export const PersonalDetailsStep = ({
         id="personal-details-form"
         component="form"
         gap={1}
-        onSubmit={handleSubmit(onNext)}
+        onSubmit={handleSubmit((data) => {
+          setFormData({
+            ...data,
+            loanPurpose: "vehicle",
+            amount: 0,
+            deposit: 0,
+            loanTerm: 0,
+          });
+          onNext();
+        })}
       >
         <H6 variant="h6" component="h2">
           Personal Details

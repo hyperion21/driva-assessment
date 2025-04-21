@@ -7,13 +7,13 @@ interface LenderStore {
   loading: boolean;
   error: string | null;
   fetchLenders: (loanData: LoanRequest) => Promise<void>;
+  reset: () => void;
 }
 
 export const useLenderStore = create<LenderStore>((set) => ({
   lenders: [],
   loading: false,
   error: null,
-
   fetchLenders: async (loanData) => {
     set({ loading: true, error: null });
 
@@ -26,4 +26,5 @@ export const useLenderStore = create<LenderStore>((set) => ({
       set({ loading: false });
     }
   },
+  reset: () => set({ lenders: [], loading: false, error: null }),
 }));

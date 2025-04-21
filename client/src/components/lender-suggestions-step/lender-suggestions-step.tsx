@@ -1,4 +1,4 @@
-import { useLenderStore } from "../../store";
+import { useFormStore, useLenderStore } from "../../store";
 import { BottomButtons } from "../bottom-buttons";
 import { ICustomButton } from "../custom-button";
 import { FlexCol } from "../display";
@@ -12,6 +12,7 @@ export const LenderSuggestionsStep = ({
   onAgain: () => void;
 }) => {
   const { lenders, loading } = useLenderStore();
+  const { resetFormData } = useFormStore();
 
   const backButton: ICustomButton = {
     option: "enable",
@@ -26,7 +27,10 @@ export const LenderSuggestionsStep = ({
     variant: "contained",
     color: "warning",
     text: "Again",
-    onClick: onAgain,
+    onClick: () => {
+      onAgain();
+      resetFormData();
+    },
   };
 
   return (

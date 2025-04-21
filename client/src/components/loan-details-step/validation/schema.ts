@@ -14,17 +14,13 @@ export const loanDetailsSchema: yup.ObjectSchema<LoanDetailsFormValues> =
       .required("Amount is required"),
     deposit: yup
       .number()
-      .transform((value, originalValue) => (originalValue == null ? 0 : value))
-      .nullable()
-      .default(null)
       .typeError("Deposit must be a number")
       .min(0, "Deposit must be at least $0")
+      .default(0)
       .when("loanPurpose", {
         is: "vehicle",
         then: (schema) =>
-          schema
-            .max(yup.ref("amount"), "Deposit must not exceed loan amount")
-            .required("Deposit is required for vehicle loans"),
+          schema.max(yup.ref("amount"), "Deposit must not exceed loan amount"),
         otherwise: (schema) => schema.default(0),
       }),
     loanTerm: yup

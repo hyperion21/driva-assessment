@@ -8,30 +8,11 @@ import {
   LoanStepper,
   PersonalDetailsStep,
 } from "../../components";
-import { useLenderStore } from "../../store";
-import {
-  LoanDetailsFormValues,
-  LoanFormData,
-  PersonalDetailsFormValues,
-} from "../../types";
-
-const defaultValue: LoanFormData = {
-  firstName: "",
-  lastName: "",
-  email: "",
-  employmentStatus: "employed",
-  employerName: "",
-  loanPurpose: "vehicle",
-  amount: null,
-  deposit: null,
-  loanTerm: null,
-};
 
 export const LoanApplication = () => {
   const [activeStep, setActiveStep] = useState(0);
-  const [formData, setFormData] = useState<LoanFormData>(defaultValue);
 
-  const { fetchLenders } = useLenderStore();
+  const theme = useTheme();
 
   const handleNext = () => {
     setActiveStep(activeStep + 1);
@@ -41,88 +22,27 @@ export const LoanApplication = () => {
     setActiveStep(activeStep - 1);
   };
 
-  const personalDetailsNext = (data: PersonalDetailsFormValues) => {
-    setFormData((prev) => ({
-      ...prev,
-      ...data,
-    }));
-
-    // do something if needed
-    handleNext();
-  };
-
-  const onLoanDetailsSubmit = async (data: LoanDetailsFormValues) => {
-    setFormData((prev) => ({
-      ...prev,
-      ...data,
-    }));
-
-    await fetchLenders({
-      deposit: data.deposit ?? 0,
-      amount: data.amount ?? 0,
-      loanTerm: data.loanTerm ?? 0,
-    });
-    handleNext();
-  };
-
-  const resetFormData = () => {
-    setFormData(defaultValue);
-  };
-
-  const handleAgain = () => {
-    setActiveStep(0);
-    resetFormData();
-  };
-
-  const theme = useTheme();
   const steps = [
     {
       name: "personal-details",
       label: "Personal Details",
-      component: (
-        <PersonalDetailsStep
-          defaultValue={defaultValue}
-          formData={formData}
-          onNext={personalDetailsNext}
-          onReset={() => {
-            setFormData((prev) => ({
-              ...prev,
-              loanPurpose: "vehicle",
-              amount: null,
-              deposit: null,
-              loanTerm: null,
-            }));
-          }}
-        />
-      ),
+      component: <PersonalDetailsStep onNext={handleNext} />,
     },
     {
       name: "loan-details",
       label: "Loan Details",
-      component: (
-        <LoanDetailsStep
-          defaultValue={defaultValue}
-          formData={formData}
-          onNext={onLoanDetailsSubmit}
-          onBack={handleBack}
-          onReset={() => {
-            setFormData((prev) => ({
-              ...prev,
-              firstName: "",
-              lastName: "",
-              email: "",
-              employmentStatus: "employed",
-              employerName: "",
-            }));
-          }}
-        />
-      ),
+      component: <LoanDetailsStep onNext={handleNext} onBack={handleBack} />,
     },
     {
       name: "suggestions",
       label: "Loan Suggestions",
       component: (
-        <LenderSuggestionsStep onBack={handleBack} onAgain={handleAgain} />
+        <LenderSuggestionsStep
+          onBack={handleBack}
+          onAgain={() => {
+            setActiveStep(0);
+          }}
+        />
       ),
     },
   ];

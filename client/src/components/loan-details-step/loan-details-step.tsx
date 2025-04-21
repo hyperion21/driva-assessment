@@ -7,25 +7,22 @@ import Select from "@mui/material/Select";
 import TextField from "@mui/material/TextField";
 import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { LoanDetailsFormValues, LoanFormData } from "../../types";
+import { useFormStore, useLenderStore } from "../../store";
+import { LoanDetailsFormValues } from "../../types";
 import { BottomButtons } from "../bottom-buttons";
 import { ICustomButton } from "../custom-button";
 import { FlexCol } from "../display";
 import { loanDetailsSchema } from "./validation";
 
 export const LoanDetailsStep = ({
-  defaultValue,
-  formData,
   onNext,
   onBack,
-  onReset,
 }: {
-  defaultValue: LoanFormData;
-  formData: LoanFormData;
-  onNext: (data: LoanDetailsFormValues) => void;
+  onNext: () => void;
   onBack: () => void;
-  onReset: () => void;
 }) => {
+  const { formData, setFormData } = useFormStore();
+  const { fetchLenders } = useLenderStore();
   const {
     control,
     handleSubmit,
@@ -35,12 +32,22 @@ export const LoanDetailsStep = ({
     reset,
   } = useForm<LoanDetailsFormValues>({
     resolver: yupResolver(loanDetailsSchema),
-    defaultValues: defaultValue,
+    defaultValues: formData,
   });
 
   useEffect(() => {
     reset(formData);
   }, [formData, reset]);
+
+  const handleReset = () => {
+    setFormData({
+      ...formData,
+      loanPurpose: "vehicle",
+      amount: 0,
+      deposit: 0,
+      loanTerm: 0,
+    });
+  };
 
   const loanPurpose = watch("loanPurpose");
 
@@ -56,10 +63,7 @@ export const LoanDetailsStep = ({
     option: "enable",
     variant: "text",
     sx: { color: "gray" },
-    onClick: () => {
-      onReset();
-      reset();
-    },
+    onClick: handleReset,
     text: "Reset",
   };
 
@@ -73,7 +77,7 @@ export const LoanDetailsStep = ({
 
   useEffect(() => {
     if (loanPurpose !== "vehicle") {
-      setValue("deposit", null);
+      setValue("deposit", 0);
     }
   }, [loanPurpose, setValue]);
 
@@ -83,7 +87,15 @@ export const LoanDetailsStep = ({
         id="loan-details-form"
         component="form"
         gap={1}
-        onSubmit={handleSubmit((data: LoanDetailsFormValues) => onNext(data))}
+        onSubmit={handleSubmit(async (data) => {
+          setFormData(data);
+          await fetchLenders({
+            deposit: data.deposit,
+            amount: data.amount,
+            loanTerm: data.loanTerm,
+          });
+          onNext();
+        })}
       >
         <Controller
           name="loanPurpose"

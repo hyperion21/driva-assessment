@@ -1,16 +1,10 @@
-import cors from "cors";
-import express, { Request, Response } from "express";
+import dotenv from "dotenv";
+import app from "./app";
 
-const app = express();
-const PORT = 3001;
+dotenv.config();
 
-app.use(cors());
-app.use(express.json());
-
-app.get("/api", (req: Request, res: Response) => {
-  res.json({ message: "Hello from Express + TypeScript!" });
-});
+const PORT = process.env.PORT || 3001;
 
 app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+  console.log(`Server running at http://localhost:${PORT}`);
 });

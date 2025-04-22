@@ -1,7 +1,10 @@
 {
-  "name": "proj",
+  "name": "driva-assessment",
   "scripts": {
-    "dev": "concurrently \"npm run start --prefix client\" \"npm run dev --prefix server\""
+    "dev": "concurrently \"npm run start --prefix client\" \"npm run dev --prefix server\"",
+    "test:client": "concurrently \"npm run start --prefix client\" \"npm run test --prefix client\"",
+    "test:server": "npm run test --prefix server",
+    "test:server:coverage": "npm run test:coverage --prefix server"
   },
   "devDependencies": {
     "concurrently": "^9.1.2"

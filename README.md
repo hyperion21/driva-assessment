@@ -91,12 +91,6 @@ You can run the tests for both the client and server using the following command
   npm run test:server:coverage
   ```
 
-### Where to Find Test Results
-
-- **Client Tests**: The test results for the client-side application will appear in the terminal after running `npm run test:client`.
-- **Server Tests**: The test results for the server-side application will appear in the terminal after running `npm run test:server`.
-- **Server Tests with Coverage**: The test results, along with the coverage information, will appear in the terminal after running `npm run test:server:coverage`. Coverage reports will be generated, showing how much of the code is covered by the tests.
-
 ## Technologies Used
 
 ### Client-side

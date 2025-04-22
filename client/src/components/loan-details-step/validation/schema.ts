@@ -9,11 +9,17 @@ export const loanDetailsSchema: yup.ObjectSchema<LoanDetailsFormValues> =
       .required("Loan purpose is required"),
     amount: yup
       .number()
+      .transform((value, originalValue) =>
+        originalValue === "" ? undefined : value
+      )
       .typeError("Amount must be a number")
       .min(2000, "Minimum amount is $2000")
-      .required("Amount is required"),
+      .default(0),
     deposit: yup
       .number()
+      .transform((value, originalValue) =>
+        originalValue === "" ? undefined : value
+      )
       .typeError("Deposit must be a number")
       .min(0, "Deposit must be at least $0")
       .default(0)
@@ -25,8 +31,11 @@ export const loanDetailsSchema: yup.ObjectSchema<LoanDetailsFormValues> =
       }),
     loanTerm: yup
       .number()
+      .transform((value, originalValue) =>
+        originalValue === "" ? undefined : value
+      )
       .typeError("Loan term must be a number")
       .min(1, "Minimum 1 year")
       .max(7, "Maximum 7 years")
-      .required("Loan term is required"),
+      .default(0),
   });

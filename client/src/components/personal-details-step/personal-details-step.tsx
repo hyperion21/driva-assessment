@@ -12,13 +12,14 @@ import { PersonalDetailsFormValues } from "../../types";
 import { BottomButtons } from "../bottom-buttons";
 import { ICustomButton } from "../custom-button";
 import { FlexCol } from "../display";
-import { H6 } from "../typography";
+import { Body1 } from "../typography";
 import { personalDetailsSchema } from "./validation";
 
 export const PersonalDetailsStep = ({ onNext }: { onNext: () => void }) => {
-  const { formData, setFormData, resetFormData } = useFormStore();
+  const { defaultFormData, formData, setFormData } = useFormStore();
   const {
     register,
+    setValue,
     handleSubmit,
     control,
     watch,
@@ -34,10 +35,10 @@ export const PersonalDetailsStep = ({ onNext }: { onNext: () => void }) => {
   }, [formData, reset]);
 
   const handleReset = () => {
-    resetFormData();
+    setFormData(defaultFormData);
   };
-
   const employmentStatus = watch("employmentStatus");
+
   const personalDetailsNextButton: ICustomButton = {
     option: "enable",
     variant: "contained",
@@ -45,6 +46,7 @@ export const PersonalDetailsStep = ({ onNext }: { onNext: () => void }) => {
     text: "Next",
     type: "submit",
   };
+
   const resetButton: ICustomButton = {
     option: "enable",
     variant: "text",
@@ -52,6 +54,13 @@ export const PersonalDetailsStep = ({ onNext }: { onNext: () => void }) => {
     onClick: handleReset,
     text: "Reset",
   };
+
+  useEffect(() => {
+    if (employmentStatus !== "employed") {
+      setValue("employerName", "");
+    }
+  }, [employmentStatus, setValue]);
+
   return (
     <FlexCol gap={2}>
       <FlexCol
@@ -69,9 +78,7 @@ export const PersonalDetailsStep = ({ onNext }: { onNext: () => void }) => {
           onNext();
         })}
       >
-        <H6 variant="h6" component="h2">
-          Personal Details
-        </H6>
+        <Body1>User information</Body1>
 
         <TextField
           label="First Name"
@@ -79,6 +86,7 @@ export const PersonalDetailsStep = ({ onNext }: { onNext: () => void }) => {
           error={!!errors.firstName}
           helperText={errors.firstName?.message}
           fullWidth
+          data-testid="input-first-name"
         />
 
         <TextField
@@ -87,6 +95,7 @@ export const PersonalDetailsStep = ({ onNext }: { onNext: () => void }) => {
           error={!!errors.lastName}
           helperText={errors.lastName?.message}
           fullWidth
+          data-testid="input-last-name"
         />
 
         <TextField
@@ -96,13 +105,18 @@ export const PersonalDetailsStep = ({ onNext }: { onNext: () => void }) => {
           error={!!errors.email}
           helperText={errors.email?.message}
           fullWidth
+          data-testid="input-email"
         />
 
         <Controller
           name="employmentStatus"
           control={control}
           render={({ field }) => (
-            <FormControl fullWidth error={!!errors.employmentStatus}>
+            <FormControl
+              fullWidth
+              error={!!errors.employmentStatus}
+              data-testid="select-employment-status"
+            >
               <InputLabel id="employment-status-label">
                 Employment Status
               </InputLabel>
@@ -110,7 +124,7 @@ export const PersonalDetailsStep = ({ onNext }: { onNext: () => void }) => {
                 labelId="employment-status-label"
                 label="Employment Status"
                 {...field}
-                value={field.value ?? ""}
+                value={field.value ?? "employed"}
               >
                 <MenuItem value="employed">Employed</MenuItem>
                 <MenuItem value="self-employed">Self-Employed</MenuItem>
@@ -124,6 +138,7 @@ export const PersonalDetailsStep = ({ onNext }: { onNext: () => void }) => {
             </FormControl>
           )}
         />
+
         {employmentStatus === "employed" && (
           <TextField
             label="Employer Name"
@@ -131,9 +146,11 @@ export const PersonalDetailsStep = ({ onNext }: { onNext: () => void }) => {
             error={!!errors.employerName}
             helperText={errors.employerName?.message}
             fullWidth
+            data-testid="input-employer-name"
           />
         )}
       </FlexCol>
+
       <BottomButtons
         buttonProps={{
           primary: personalDetailsNextButton,

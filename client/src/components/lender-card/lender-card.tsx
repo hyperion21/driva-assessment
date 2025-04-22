@@ -12,7 +12,7 @@ export const LenderCard = ({ details }: { details: Lender }) => {
   const fees = `Fees: ${details.fee ? details.fee : "No fees"}`;
 
   return (
-    <Card>
+    <Card data-testid={`lender-card-${details.id}`}>
       <CardActionArea>
         <CardMedia
           component="img"

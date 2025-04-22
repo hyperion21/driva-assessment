@@ -1,20 +1,21 @@
 {
   "compilerOptions": {
-    "target": "es2016",                      
+    "target": "es2016",
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
-    "allowJs": true,                        
-    "skipLibCheck": true,                     
-    "esModuleInterop": true,                  
-    "allowSyntheticDefaultImports": true,  
-    "strict": true,                    
-    "forceConsistentCasingInFileNames": true, 
-    "module": "ESNext",                      
+    "allowJs": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "ESNext",
     "moduleResolution": "Node",
-    "resolveJsonModule": true,          
-    "isolatedModules": true,          
-    "noEmit": true,                          
-    "jsx": "react-jsx"
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "types": ["node","cypress"]
   },
-  "include": ["src"],
+  "include": ["src", "cypress"],
   "exclude": ["node_modules"]
 }

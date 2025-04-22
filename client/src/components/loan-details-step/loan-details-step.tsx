@@ -12,6 +12,7 @@ import { LoanDetailsFormValues } from "../../types";
 import { BottomButtons } from "../bottom-buttons";
 import { ICustomButton } from "../custom-button";
 import { FlexCol } from "../display";
+import { Body1 } from "../typography";
 import { loanDetailsSchema } from "./validation";
 
 export const LoanDetailsStep = ({
@@ -97,13 +98,24 @@ export const LoanDetailsStep = ({
           onNext();
         })}
       >
+        <Body1>Amount to be loaned</Body1>
+
         <Controller
           name="loanPurpose"
           control={control}
           render={({ field }) => (
-            <FormControl fullWidth error={!!errors.loanPurpose} margin="normal">
+            <FormControl
+              fullWidth
+              error={!!errors.loanPurpose}
+              margin="normal"
+              data-testid="select-loan-purpose"
+            >
               <InputLabel>Loan Purpose</InputLabel>
-              <Select {...field} label="Loan Purpose">
+              <Select
+                {...field}
+                value={field.value ?? "vehicle"}
+                label="Loan Purpose"
+              >
                 <MenuItem value="vehicle">Vehicle</MenuItem>
                 <MenuItem value="home">Home Improvement</MenuItem>
                 <MenuItem value="etc">Etc</MenuItem>
@@ -126,6 +138,7 @@ export const LoanDetailsStep = ({
               margin="normal"
               error={!!errors.amount}
               helperText={errors.amount?.message}
+              data-testid="input-loan-amount"
             />
           )}
         />
@@ -144,6 +157,7 @@ export const LoanDetailsStep = ({
                 margin="normal"
                 error={!!errors.deposit}
                 helperText={errors.deposit?.message}
+                data-testid="input-deposit"
               />
             )}
           />
@@ -162,10 +176,12 @@ export const LoanDetailsStep = ({
               margin="normal"
               error={!!errors.loanTerm}
               helperText={errors.loanTerm?.message}
+              data-testid="input-loan-term"
             />
           )}
         />
       </FlexCol>
+
       <BottomButtons
         buttonProps={{
           primary: loanDeatilsSubmitButton,

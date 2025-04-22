@@ -14,12 +14,14 @@ const defaultFormData: LoanFormData = {
 };
 
 interface FormStore {
+  defaultFormData: LoanFormData;
   formData: LoanFormData;
   setFormData: (data: Partial<LoanFormData>) => void;
   resetFormData: () => void;
 }
 
 export const useFormStore = create<FormStore>((set) => ({
+  defaultFormData: defaultFormData,
   formData: defaultFormData,
   setFormData: (data) =>
     set((state) => ({

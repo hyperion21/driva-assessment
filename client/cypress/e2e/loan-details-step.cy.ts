@@ -15,6 +15,32 @@ describe("Loan Details Step", () => {
   });
 
   it("Submits valid loan details for vehicle loan purpose", () => {
+    cy.intercept("POST", "http://localhost:3001/api/loans/calculate-lenders", {
+      statusCode: 200,
+      body: [
+        {
+          id: "lender-a",
+          name: "Lender A",
+          interest: 5.5,
+          fee: "$10 processing fee",
+          monthly: 153,
+        },
+        {
+          id: "lender-b",
+          name: "Lender B",
+          interest: 5,
+          fee: "$15 application fee",
+          monthly: 151,
+        },
+        {
+          id: "lender-c",
+          name: "Lender C",
+          interest: 6,
+          monthly: 155,
+        },
+      ],
+    }).as("calculateLenders");
+
     cy.get('[data-testid="select-loan-purpose"]').click();
     cy.get("li").contains("Vehicle").click();
     cy.get('[data-testid="input-loan-amount"]').clear().type("3000");
@@ -22,16 +48,53 @@ describe("Loan Details Step", () => {
     cy.get('[data-testid="input-loan-term"]').clear().type("4");
 
     cy.contains("Submit").click();
+
+    cy.wait("@calculateLenders").then(({ response }) => {
+      expect(response?.statusCode).to.equal(200);
+      expect(response?.body).to.have.length(3);
+    });
     cy.contains("Loan Suggestions");
   });
 
   it("Submits valid loan details for non vehicle loan purpose", () => {
+    cy.intercept("POST", "http://localhost:3001/api/loans/calculate-lenders", {
+      statusCode: 200,
+      body: [
+        {
+          id: "lender-a",
+          name: "Lender A",
+          interest: 5.5,
+          fee: "$10 processing fee",
+          monthly: 153,
+        },
+        {
+          id: "lender-b",
+          name: "Lender B",
+          interest: 5,
+          fee: "$15 application fee",
+          monthly: 151,
+        },
+        {
+          id: "lender-c",
+          name: "Lender C",
+          interest: 6,
+          monthly: 155,
+        },
+      ],
+    }).as("calculateLenders");
+
     cy.get('[data-testid="select-loan-purpose"]').click();
     cy.get("li").contains("Home Improvement").click();
     cy.get('[data-testid="input-loan-amount"]').clear().type("5000");
     cy.get('[data-testid="input-loan-term"]').clear().type("6");
 
     cy.contains("Submit").click();
+
+    cy.wait("@calculateLenders").then(({ response }) => {
+      expect(response?.statusCode).to.equal(200);
+      expect(response?.body).to.have.length(3);
+    });
+
     cy.contains("Loan Suggestions");
   });
 

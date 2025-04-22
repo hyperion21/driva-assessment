@@ -3,7 +3,7 @@ describe("Personal Details Step", () => {
     cy.visit("http://localhost:3000");
   });
 
-  it("Shows validation errors when submitting empty form", () => {
+  it("Shows validation errors", () => {
     cy.contains("User information");
     cy.contains("Next").click();
     cy.contains("First name is required");

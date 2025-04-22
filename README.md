@@ -32,6 +32,7 @@ driva-assessment/
 ├── client/             # Client-side React app
 │   ├── package.json    # Client dependencies and scripts
 │   └── src/            # Client source code
+│   └── cypress/        # Client testing code
 ├── server/             # Server-side Express app
 │   ├── package.json    # Server dependencies and scripts
 │   └── src/            # Server source code
@@ -113,4 +114,4 @@ You can run the tests for both the client and server using the following command
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE.txt) file for details.
